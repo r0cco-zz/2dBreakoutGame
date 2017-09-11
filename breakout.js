@@ -57,6 +57,16 @@ function keyUpHandler(e) {
     }
 }
 
+//and mouse movement event handler
+document.addEventListener("mousemove", mouseMoveHandler, false);
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+}
+
+//sets status of bricks (hit or unhit) and checks win condition
 function collisionDetection() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
@@ -76,12 +86,14 @@ function collisionDetection() {
     }
 }
 
+//draws the score
 function drawScore() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Score: "+score, 8, 20);
 }
 
+//draws the ball
 function drawBall() {
 	ctx.beginPath();
 	ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -90,6 +102,7 @@ function drawBall() {
 	ctx.closePath();
 }
 
+//draws the paddle
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
@@ -98,6 +111,7 @@ function drawPaddle() {
     ctx.closePath();
 }
 
+//draws the bricks, ignores drawing hit ones
 function drawBricks() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
@@ -116,6 +130,7 @@ function drawBricks() {
     }
 }
 
+//the main function, does the work.
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBricks();
@@ -151,4 +166,5 @@ function draw() {
 	}
 }
 	
+//runs the game with a redraw every 10 miliseconds	
 setInterval(draw, 10);
