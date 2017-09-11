@@ -36,8 +36,9 @@ var leftPressed = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-//the score
+//gameplay variables
 var score = 0;
+var lives = 3;
 
 //keypress event handler functions
 function keyDownHandler(e) {
@@ -93,6 +94,13 @@ function drawScore() {
     ctx.fillText("Score: "+score, 8, 20);
 }
 
+//draws the number of lives
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+}
+
 //draws the ball
 function drawBall() {
 	ctx.beginPath();
@@ -131,13 +139,14 @@ function drawBricks() {
 }
 
 //the main function, does the work.
-function draw() {
+(function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBricks();
 	drawBall();
 	collisionDetection();
 	drawPaddle();
 	drawScore();
+	drawLives();
 	x += dx;
 	y += dy;
 		
@@ -153,8 +162,18 @@ function draw() {
 			dy = -dy;
 		}
 		else {
-			alert("GAME OVER");
-			document.location.reload();
+			lives--;
+			if(lives === 0) {
+				alert("GAME OVER");
+				document.location.reload();
+			}
+			else {
+				x = canvas.width/2;
+				y = canvas.height-30;
+				dx = 2;
+				dy = -2;
+				paddleX = (canvas.width-paddleWidth)/2;
+			}
 		}
 	}
 	
@@ -164,7 +183,6 @@ function draw() {
 	else if(leftPressed && paddleX > 0) {
 		paddleX -= 7;
 	}
-}
 	
-//runs the game with a redraw every 10 miliseconds	
-setInterval(draw, 10);
+	requestAnimationFrame(draw);
+})();
